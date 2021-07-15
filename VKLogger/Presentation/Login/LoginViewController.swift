@@ -39,10 +39,6 @@ final class LoginViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    @IBAction func backToLoginScreen(_ segue: UIStoryboardSegue) {
-      
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
     }
