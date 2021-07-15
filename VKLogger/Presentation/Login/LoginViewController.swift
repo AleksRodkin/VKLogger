@@ -39,21 +39,41 @@ final class LoginViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    @IBAction private func loginButtonPressed(_ sender: UIButton) {
-       
-        guard
-            let login = loginTextField.text,
-            let password = passwordTextField.text
-        else {
-            print("Значения не введены")
-            return
-        }
+    @IBAction func backToLoginScreen(_ segue: UIStoryboardSegue) {
+      
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        if login == "1" && password == "1" {
-            print("Успех")
-        } else {
-            print("Dir. by Robert B. Weide")
+    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        
+        if identifier == "moveToMain" {
+            guard
+                let login = loginTextField.text,
+                let password = passwordTextField.text
+            else {
+                print("Значения не введены")
+                showErrorAlert(message: "Поля не заполнены")
+                return false
+            }
+            
+            if login == "1" && password == "1" {
+                print("Успех")
+                return true
+            } else {
+                showErrorAlert(message: "Неверный логин или пароль")
+                print("Dir. by Robert B. Weide")
+                return false
+            }
         }
+        showErrorAlert(message: "Неверный identifier у segue")
+        return false
+    }
+    
+    @IBAction private func loginButtonPressed(_ sender: UIButton) {
+       print("loginButtonPressed")
     }
     
     @objc private func keyboardWasShown(notification: Notification) {
@@ -87,5 +107,17 @@ final class LoginViewController: UIViewController {
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         scrollView.addGestureRecognizer(tapGesture)
+    }
+    
+    private func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "OK", style: .cancel) {_ in
+            self.loginTextField.text = ""
+            self.passwordTextField.text = ""
+        }
+        
+        alert.addAction(action)
+        present(alert, animated: true)
     }
 }
